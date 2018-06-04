@@ -10,8 +10,8 @@ import tornadofx.rectangle
 
 class GridUnit(private val x: Int, private val y: Int) : View() {
 
-    private val endX = x + GRID_UNIT_SIZE
-    private val endY = y + GRID_UNIT_SIZE
+    private val endX = x + simulationConfig.gridUnitSize
+    private val endY = y + simulationConfig.gridUnitSize
     private val units: Map<Point, Rectangle>
 
     override val root: Parent = VBox()
@@ -20,13 +20,13 @@ class GridUnit(private val x: Int, private val y: Int) : View() {
         val unitsBuilder = mutableMapOf<Point, Rectangle>()
 
         with(root) {
-            for (i in x..x + GRID_UNIT_SIZE) {
+            for (i in x..x + simulationConfig.gridUnitSize) {
                 hbox {
-                    for (j in y..y + GRID_UNIT_SIZE) {
+                    for (j in y..y + simulationConfig.gridUnitSize) {
                         rectangle {
                             fill = Color.WHITE
-                            width = GRID_UNIT_PIXELS
-                            height = GRID_UNIT_PIXELS
+                            width = simulationConfig.gridUnitPixels
+                            height = simulationConfig.gridUnitPixels
                             unitsBuilder[Point(i, j)] = this
 
                         }
@@ -35,7 +35,6 @@ class GridUnit(private val x: Int, private val y: Int) : View() {
             }
         }
 
-
         units = unitsBuilder
     }
 
@@ -43,9 +42,9 @@ class GridUnit(private val x: Int, private val y: Int) : View() {
         rectangle.fill = Color.WHITE
     }
 
-    fun markAgent(agent: Agent) {
-        val unit = units[Point(agent.x, agent.y)]
-        unit?.fill = Color.BLACK
+    fun markColor(point: Point, color: Color) {
+        val unit = units[point]
+        unit?.fill = color
     }
 
     fun contains(point: Point): Boolean = (x >= point.x && y >= point.y && endX < point.x && endY < point.y)
@@ -59,9 +58,9 @@ class Grid : View() {
     init {
         val gridUnitsBuilder = mutableMapOf<GridUnitPoint, GridUnit>()
         with(root) {
-            for (x in 0..BOARD_SIZE step GRID_UNIT_SIZE) {
+            for (x in 0..simulationConfig.boardSize step simulationConfig.gridUnitSize) {
                 hbox {
-                    for (y in 0..BOARD_SIZE step GRID_UNIT_SIZE) {
+                    for (y in 0..simulationConfig.boardSize step simulationConfig.gridUnitSize) {
                         GridUnit(x, y).also {
                             add(it)
                             gridUnitsBuilder[Point(x, y).asGridUnitPoint()] = it
@@ -75,7 +74,6 @@ class Grid : View() {
     }
 
     fun getGridUnitForPoint(gridUnitPoint: GridUnitPoint): GridUnit? {
-//        return gridUnits[gridUnitPoint] ?: throw NullPointerException("Grid unit doesn't exist for $gridUnitPoint")
         return gridUnits[gridUnitPoint]
     }
 

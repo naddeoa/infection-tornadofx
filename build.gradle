@@ -1,4 +1,3 @@
-
 buildscript {
     ext.kotlin_version = '1.2.31'
 
@@ -14,11 +13,12 @@ plugins {
     id 'java'
 }
 apply plugin: 'kotlin'
+apply plugin: 'application'
 
 group 'org.naddeo.simulation'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'kotlin'
+mainClassName = "org.naddeo.simulation.MainKt"
 
 sourceCompatibility = 1.8
 
